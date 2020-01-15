@@ -6,6 +6,13 @@
 </head>
 <body onload="init()">
     <div id="user-info"></div>
+    <form id="search-country-form">
+        <input id="search-bar" type="text" placeholder="Search by country.." name="search" list="countries">
+        <datalist id="countries">
+            <option value="All countries">
+        </datalist>
+    </form>
     <div id="coin-list"></div>
+    <button onclick="topFunction()" id="top-button" title="Go to top">Top</button>
 </body>
 </html>

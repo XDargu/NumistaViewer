@@ -26,17 +26,11 @@ function expandCoinCard(item)
 {
 	let coinId = item.id;
 	
-	console.log('expand');
-	console.log(coinId);
-	
 	requestCoinInfo(coinId, function(data) {
 	
-		console.log('coin info requested');
 		requestCoinPrices(coinId, function(priceData) {
 			let htmlText = createCoinCard(data, priceData);
 			document.getElementById(coinId).outerHTML = htmlText;
-			
-			console.log('coin prices requested');
 		});
 	});
 }
@@ -279,8 +273,8 @@ function createUserCoins(userId, page, data, append) {
 		for (let i=0; i<data.list.length; ++i)
 		{
 			let coin = data.list[i];
-console.log(coin)
-			if (coin.country.name !== currentCountry)
+			
+            if (coin.country.name !== currentCountry)
 			{
 				if (currentCountry)
 				{
@@ -301,6 +295,11 @@ console.log(coin)
 		htmlText += createCoinGroupEnd();
 		htmlText += createCountryEnd();
 	}
+    
+    if (!data.list || data.list.length == 0)
+    {
+        //htmlText = 'No coins';
+    }
 	
 	if (append)
 	{
@@ -323,13 +322,17 @@ function requestAddCurrentUserCoins()
 function addUserCoinsToPage(userId, page, callback)
 {
 	document.getElementById('coin-list').innerHTML +=  '<div class="centered" id="add-coin-loader"><div class="loader-centered"></div></div>';
-	requestUserCoins(userId, page, function(data) {
+	requestUserCoins(userId, page, countryFilter, function(data) {
 	
-		createUserCoins(userId, page, data, true);
-		let loader = document.getElementById('add-coin-loader');
-		loader.parentNode.removeChild(loader);
-		
-		callback();
+        let numPages = data.pages.max;
+        if (page <= numPages)
+        {
+            createUserCoins(userId, page, data, true);
+        }
+        
+        let loader = document.getElementById('add-coin-loader');
+        loader.parentNode.removeChild(loader);
+        callback();
 	});
 }
 
@@ -456,11 +459,27 @@ function requestCoinPrices(coinId, callback)
 	request.send();
 }
 
-function requestUserCoins(userId, page, callback)
+function requestCountryList(callback)
+{
+    let request = new XMLHttpRequest();
+
+	let requestString = 'https://qmegas.info/numista-api/country/list/'
+	request.open('GET', requestString, true);
+
+	request.onload = function () {
+		let data = JSON.parse(this.response);
+		callback(data);
+	}
+
+	// Send request
+	request.send();
+}
+
+function requestUserCoins(userId, page, countryId, callback)
 {
 	let request = new XMLHttpRequest();
 
-	let requestString = 'https://qmegas.info/numista-api/user/collection/?user_id=' + userId + '&page=' + page
+	let requestString = 'https://qmegas.info/numista-api/user/collection/?user_id=' + userId + '&page=' + page + '&filter_country=' + countryId
 	request.open('GET', requestString, true);
 
 	request.onload = function () {
@@ -476,7 +495,7 @@ function requestAllUserCoins(userId, callback)
 {
 	let coinList = [];
 	
-	requestUserCoins(userId, 1, function(data){
+	requestUserCoins(userId, 1, null, function(data){
 		
 		coinList = coinList.concat(data.list);
 		
@@ -488,7 +507,7 @@ function requestAllUserCoins(userId, callback)
 		
 		for (let i=2; i<numPages + 1; ++i)
 		{
-			requestUserCoins(userId, i, function(moreData){
+			requestUserCoins(userId, i, null, function(moreData){
 				
 				coinList = coinList.concat(moreData.list);
 				addedPages++;
@@ -505,16 +524,90 @@ function requestAllUserCoins(userId, callback)
 	});
 }
 
+function resetCoinList()
+{
+    currentPage = 0;
+    loadingNextPage = false;
+    document.getElementById('coin-list').innerHTML = "";
+}
+
+function onSearchCountry(evt)
+{
+    // Clear current coins
+    resetCoinList();
+    
+    // Get filter    
+    let searchBar = document.getElementById("search-bar");
+    if (searchBar.value == "" || searchBar.value == "All countries")
+    {
+        countryFilter = null;
+    }
+    else
+    {
+        const countriesAmount = countryList.length;
+        for (let i=0; i<countriesAmount; ++i) {
+            
+            if (countryList[i].name == searchBar.value)
+            {
+                countryFilter = countryList[i].id;
+            }
+        }
+    }
+    
+    // Filter by country
+    evt.preventDefault();
+    requestAddCurrentUserCoins();
+}
+
 var currentPage = -1;
+var countryFilter = null;
 var loadingNextPage = false;
 var currentUserId;
+var countryList = [];
 
 function init() {
+    
+    // Initialize list search bar
+    requestCountryList(function(data){ 
+        countryList = data.countries; 
+        
+        let dataset = document.getElementById("countries");
+        
+        const countriesAmount = countryList.length;
+        for (let i=0; i<countriesAmount; ++i) {
+            let option = document.createElement("option");
+            option.value = countryList[i].name;
+            option.id = countryList[i].id;
+            dataset.appendChild(option);
+        }
+    });
+    
+    let searchForm = document.getElementById("search-country-form");
+    searchForm.addEventListener("submit", onSearchCountry, true);
+    
+    
+    // Initialize go to top button
+    
+    
+    // Display collection
 	displayUserCollection();
+}
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 	
 window.onscroll = function(ev) {
-	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    let topButton = document.getElementById("top-button");
+    
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        topButton.style.display = "block";
+    } else {
+        topButton.style.display = "none";
+    }
+    
+	if ((window.innerHeight + window.pageYOffset) >= document.body.scrollHeight) {
 		// you're at the bottom of the page
 		if (currentPage >= 0 && !loadingNextPage)
 		{
