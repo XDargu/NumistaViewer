@@ -110,7 +110,7 @@ body {
     font-size: 14px;
     display: flex;
     padding-top: 5px;
-    width: 500px;
+    max-width: 400px;
 }
 
 #user-info .user-item span.user-name {
@@ -162,16 +162,20 @@ body {
     border: 1px solid #eee;
     border-radius: 10px;
     box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,.125);
+    
+    box-sizing: border-box;
+    width: calc(100% - 20px);
+    max-width: 500px;
 }
 
 /* For mobile phones: */
-/.coint-card {
+/*.coint-card {
 	width: 100%;
-}
+}*/
 
 @media only screen and (min-width: 768px) {
   /* For desktop: */
-  .coint-card {width: 500px;}
+  /*.coint-card {width: 500px;}*/
 }
 
 .coint-card .images {
@@ -182,10 +186,12 @@ body {
 }
 
 .coint-card .images img {
-    width: 200px;
-    height: 200px;
+    /*width: 200px;
+    height: 200px;*/
     padding-left: 10px;
     padding-right: 10px;
+    width: calc(50% - 20px);
+    min-width: 80px;
 }
 
 .coint-card .content {

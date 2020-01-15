@@ -234,11 +234,14 @@ function createUserInfo(userData)
 	htmlText += '<img id="user-img" src="' + userData.image + '">';
 	htmlText += '<div id="user-details">';
 	htmlText += '<div id="user-name">Collection of ' + userData.name + '</div>';
+    
+    htmlText += '<div id="user-data-block">';
 	htmlText += createUserValue('Country', userData.location);
 	htmlText += createUserValue('Member since', userData.member_since);
 	htmlText += createUserValue('Median collection value', '<div id="median-value-loader" class="loader value-loader"></div>');
 	htmlText += createUserValue('Average collection value', '<div id="average-value-loader" class="loader value-loader"></div>');
-	//htmlText += ;
+    htmlText += '</div>';
+    
 	htmlText += '</div>';
 
 	return htmlText;
@@ -276,7 +279,7 @@ function createUserCoins(userId, page, data, append) {
 		for (let i=0; i<data.list.length; ++i)
 		{
 			let coin = data.list[i];
-
+console.log(coin)
 			if (coin.country.name !== currentCountry)
 			{
 				if (currentCountry)
