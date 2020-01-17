@@ -1,8 +1,14 @@
+function getUserIDParameter()
+{
+    let url = new URL(window.location.href);
+    return url.searchParams.get("uid");
+}
+
 function displayUserCollection(userId)
 {
 	if (!userId)
 	{
-		userId = 97163;
+		userId = getUserIDParameter();
 	}
 	
 	currentUserId = userId;
@@ -224,6 +230,13 @@ function createUserValue(name, value)
 
 function createUserInfo(userData)
 {
+    if (userData.error)
+    {
+        let searchForm = document.getElementById("search-country-form");
+        searchForm.classList.add("hidden");
+        return '<div class="centered-card"><h1>User not found</h1><p>The requested user has not been found. Make sure the user ID is valid.</p><a id="id-help" href="help.html"><i class="help-icon">?</i><p class="help-text">How to find my user ID</p></a></div>';
+    }
+    
 	let htmlText = '';
 	htmlText += '<img id="user-img" src="' + userData.image + '">';
 	htmlText += '<div id="user-details">';
@@ -585,6 +598,8 @@ function init() {
     let searchForm = document.getElementById("search-country-form");
     searchForm.addEventListener("submit", onSearchCountry, true);
     
+    let searchCountryButton = document.getElementById("search-bar");
+    searchCountryButton.addEventListener("change", onSearchCountry, true);
     
     // Initialize go to top button
     

@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>Numista Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Web to display your coin collection from numista">
+    <meta name="keywords" content="Numista,Web,Viewer,Coin,Collection">
+    <meta name="author" content="Daniel Armesto">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="Numista.css">
+	<script src="scripts.js"></script>
+</head>
+<body onload="init()">
+    <a class="button-top" href="index.html">Change user ID</a>
+    <div id="user-info"></div>
+    <form id="search-country-form">
+        <input id="search-bar" type="text" placeholder="Search by country.." name="search" list="countries">
+        <datalist id="countries">
+            <option value="All countries">
+        </datalist>
+    </form>
+    <div id="coin-list"></div>
+    <button onclick="topFunction()" id="top-button" title="Go to top">Top</button>
+</body>
+</html>
