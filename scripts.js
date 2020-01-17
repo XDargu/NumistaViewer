@@ -77,8 +77,8 @@ function createCoinCard(coinData, priceData)
 	htmlText += '<div class="coint-card" onclick="contractCoinCard(this)" id="' + coinData.id +'">';
 
 	htmlText += '<div class="images">';
-	htmlText += '<img src="' + coinData.images.obverse.fullsize + '">';
-	htmlText += '<img src="' + coinData.images.reverse.fullsize + '">';
+	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.images.obverse.fullsize + '">';
+	htmlText += '<img alt="' + coinData.title + ' reverse" src="' + coinData.images.reverse.fullsize + '">';
 	htmlText += '</div>';
 
 	htmlText += '<div class="content">';
@@ -123,8 +123,8 @@ function createCoinSummaryCard(coinData)
 	htmlText += '<div class="coint-card" onclick="expandCoinCard(this)" id="' + coinData.id +'">';
 
 	htmlText += '<div class="images">';
-	htmlText += '<img src="' + coinData.images.obverse.fullsize + '">';
-	htmlText += '<img src="' + coinData.images.reverse.fullsize + '">';
+	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.images.obverse.fullsize + '">';
+	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.images.reverse.fullsize + '">';
 	htmlText += '</div>';
 
 	htmlText += '<div class="content">';
@@ -147,8 +147,8 @@ function createCoinSummaryCardFromUserData(coinData)
 	htmlText += '<div class="coint-card" onclick="expandCoinCard(this)" id="' + coinData.id +'">';
 
 	htmlText += '<div class="images">';
-	htmlText += '<img src="' + coinData.obverse + '">';
-	htmlText += '<img src="' + coinData.reverse + '">';
+	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.obverse + '">';
+	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.reverse + '">';
 	htmlText += '</div>';
 
 	htmlText += '<div class="content">';
@@ -238,7 +238,7 @@ function createUserInfo(userData)
     }
     
 	let htmlText = '';
-	htmlText += '<img id="user-img" src="' + userData.image + '">';
+	htmlText += '<img alt="user profileimage" id="user-img" src="' + userData.image + '">';
 	htmlText += '<div id="user-details">';
 	htmlText += '<div id="user-name">Collection of ' + userData.name + '</div>';
     
@@ -622,7 +622,7 @@ window.onscroll = function(ev) {
         topButton.style.display = "none";
     }
     
-	if ((window.innerHeight + window.pageYOffset) >= document.body.scrollHeight) {
+	if ((window.innerHeight + window.pageYOffset) >= (document.body.scrollHeight - 20)) {
 		// you're at the bottom of the page
 		if (currentPage >= 0 && !loadingNextPage)
 		{
