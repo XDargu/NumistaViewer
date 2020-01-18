@@ -236,6 +236,30 @@ body {
     text-overflow: ellipsis;
 }
 
+.content-button {
+    cursor: pointer;
+    border: none;
+    width: auto;
+    display: block;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #3498db;
+    border: none;
+    padding: 10px 0px;
+    text-align: center;
+}
+
+.content-button.bottom {
+    border-radius: 0 0 10px 10px;
+}
+
+.content-button:hover {
+    background-color: #555;
+}
+
 .clear { clear:left }
 
 #search-bar {

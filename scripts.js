@@ -41,10 +41,8 @@ function expandCoinCard(item)
 	});
 }
 
-function contractCoinCard(item)
+function contractCoinCard(coinId)
 {
-	let coinId = item.id;
-	
 	requestCoinInfo(coinId, function(data) {
 	
 		requestCoinPrices(coinId, function(priceData) {
@@ -70,11 +68,33 @@ function createCoinValue(name, value)
 	return htmlText;
 }
 
+function createHideDetailsButton(name, coinId)
+{
+	let htmlText = '';
+
+    htmlText += '<a class="content-button" onclick="contractCoinCard(' + coinId + ')">';
+	htmlText += name;
+	htmlText += '</a>';
+
+	return htmlText;
+}
+
+function createViewCoinButton(name, link)
+{
+	let htmlText = '';
+
+    htmlText += '<a class="content-button bottom" href="' + link + '" target="_blank">';
+	htmlText += name;
+	htmlText += '</a>';
+
+	return htmlText;
+}
+
 function createCoinCard(coinData, priceData)
 {
 	let htmlText = '';
 
-	htmlText += '<div class="coint-card" onclick="contractCoinCard(this)" id="' + coinData.id +'">';
+	htmlText += '<div class="coint-card" id="' + coinData.id +'">';
 
 	htmlText += '<div class="images">';
 	htmlText += '<img alt="' + coinData.title + ' obverse" src="' + coinData.images.obverse.fullsize + '">';
@@ -86,6 +106,8 @@ function createCoinCard(coinData, priceData)
 	htmlText += '<div class="content-title">';
 	htmlText += coinData.title;
 	htmlText += '</div>';
+    
+    htmlText += createHideDetailsButton('Hide details', coinData.id);
 
 	htmlText += createCoinValue('Country', coinData.country.name);
 	htmlText += createCoinValue('Years', coinData.years_range);
@@ -108,6 +130,8 @@ function createCoinCard(coinData, priceData)
 		htmlText += createCoinValue('Median value', 'Unknown');
 		htmlText += createCoinValue('Average value', 'Unknown');
 	}
+    
+    htmlText += createViewCoinButton('View coin in Numista', 'https://en.numista.com/catalogue/pieces' + coinData.id + '.html');
 
 	htmlText += '</div>';
 
